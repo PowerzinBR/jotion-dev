@@ -1,24 +1,47 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import { useConvexAuth } from "convex/react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/spinner";
+import { SignInButton } from "@clerk/clerk-react";
 
 export const Heading = () => {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
   return (
     <div className="max-w-3xl space-y-4">
       <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
         Suas ideias, documentos, & planos. Unificados. Bem vindo ao{" "}
         <span className="underline">Jotion</span>
       </h1>
-      <h3 className="text-base sm:text-xl md:text-2xl font-medium">
+      <h3 className="text-base sm:text-xl md:text-2xl font-semibold">
         Jotion é o espaço conectado onde <br />
         melhor, o trabalho rápido acontece.
       </h3>
-      <Button>
-        Entre pro Jotion
-        <ArrowRight className="h-4 w-4 ml-2" />
-      </Button>
+      {isLoading && (
+        <div className="w-full flex items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      )}
+      {isAuthenticated && !isLoading && (
+        <Button asChild>
+          <Link href="/documents">
+            Entre pro Jotion
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Link>
+        </Button>
+      )}
+      {!isAuthenticated && !isLoading && (
+        <SignInButton mode="modal">
+          <Button>
+            Tenha o Jotion de graça
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Button>
+        </SignInButton>
+      )}
     </div>
   );
 };

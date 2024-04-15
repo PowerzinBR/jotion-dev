@@ -26,12 +26,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { useSearch } from "@/hooks/use-search";
+
 import { Item } from "./item";
 import toast from "react-hot-toast";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
+import { useSettings } from "@/hooks/use-settings";
 
 export const Navigation = () => {
+  const search = useSearch();
+  const settings = useSettings();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const create = useMutation(api.documents.create);
@@ -149,8 +154,17 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
-          <Item label="Pesquisar" icon={Search} isSearch onClick={() => {}} />
-          <Item label="Configurações" icon={Settings} onClick={() => {}} />
+          <Item
+            label="Pesquisar"
+            icon={Search}
+            isSearch
+            onClick={search.onOpen}
+          />
+          <Item
+            label="Configurações"
+            icon={Settings}
+            onClick={settings.onOpen}
+          />
           <Item
             onClick={handleCreate}
             label="Nova página"
